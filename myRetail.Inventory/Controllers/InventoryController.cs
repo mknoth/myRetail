@@ -60,7 +60,7 @@ namespace myRetail.Inventory.Controllers
             if (!string.IsNullOrWhiteSpace(searchInfo.SearchItem))
             {
                 searchInfo.SearchItem = searchInfo.SearchItem.ToLower();
-                items = list.Where(x => x.Title.ToLower() == searchInfo.SearchItem);
+                items = list.Where(x => x.Title.Contains(searchInfo.SearchItem));
             }
             else
             {
