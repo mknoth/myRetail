@@ -1,0 +1,99 @@
+﻿<div ng-controller="listDetailController">
+    <div class="row" ng-cloak>
+
+        <div class="col-xs-12 col-sm-8 col-sm-pull-2 col-sm-push-2 col-md-6 col-md-pull-0 col-md-push-0" ng-class="{'hide-section': dsiplayItem }">
+            <form class="form-horizontal" role="searchForm" name="requestForm" novalidate>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" name="btnSearch" ng-disabled="!data.isListReady()" aria-label="SearchInventoryButton" ng-click="search()"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                        <input type="text" ng-model="data.searchInfo.searchProduct" aria-label="InputInventoryProduct"
+                               class="form-control" aria-describedby="inputGroupProductSearch"
+                               name="inputProduct" id="inputProduct" placeholder="search target"
+                               ng-keypress="($event.which === 13)?search():0;"/>
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-center" role="paging" aria-labelledby="PagingControl">
+                <pagination items-per-page="data.searchInfo.itemsPerPage"
+                            total-items="data.list.totalItemCount"
+                            ng-model="data.searchInfo.page"
+                            max-size="3"
+                            class="pagination-sm"
+                            boundary-links="false"
+                            rotate="true"
+                            num-pages="numPages"
+                            ng-change="search()">
+                </pagination>
+            </div>
+
+            <div class="table-responsive" role=”resultsTable”>
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <th ng-repeat="header in data.headerColumn" ng-class="header.cssClass">
+                        <span class="text-primary">
+                            <a href="" ng-click="sort(header)">{{ header.title }}</a> <i ng-class="{'glyphicon glyphicon-sort-by-attributes': header.reverse, 'glyphicon glyphicon-sort-by-attributes-alt': header.reverse === false, '':header.reverse === undefined}"></i>
+                        </span>
+                    </th>
+                    </thead>
+                    <tbody ng-show="data.isListReady()">
+                    <tr data-ng-repeat="i in data.list.items" ng-click="$parent.getItem(i.title)">
+                        <td class="text-left list-grid-column-80"><small><a href="">{{i.title}}</a></small></td>
+                        <td class="text-right list-grid-column-20"><small>{{i.price | currency}}</small></td>
+                    </tr>
+                    </tbody>
+                    <tfoot ng-if="data.list.items.length == 0 && data.isListReady()">
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            <div class="alert alert-warning text-center">
+                                No items found.
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-sm-pull-2 col-sm-push-2 col-md-4 col-md-pull-1 col-md-push-1" ng-class="{'hide-section': !dsiplayItem }" ng-if="data.isItemReady()"
+             role="DetailItemView">
+            <h4 class="text-center" ng-bind="data.item.title + ' with'"></h4>
+            <h4 class="text-center" ng-bind="data.item.description"></h4>
+            <div class="text-center"> <img ng-src="img/{{data.item.image}}" alt="productimage" height="225" width="225"/>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 class="price-line" ng-bind="data.item.price | currency"></h2><span class="grey-text" ng-if="data.item.online"> online price</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10">
+                    <div class="quantity-line">
+                        <span>quantity:</span>
+                        <div class="text-right">
+                            <button type="button" class="btn btn-default btn-lg" ng-click="quantityDecrease()" aria-label="Decrease"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                            <span class="text-center" ng-bind="data.item.quantity"></span>
+                            <button type="button" class="btn btn-default btn-lg" ng-click="quantityPlus()" aria-label="Increase"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2>product highlights</h2>
+            <ul>
+                <li ng-repeat="detail in data.item.details" class="grey-text"><span ng-bind="detail"></span></li>
+            </ul>
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <button class="btn btn-block btn-default" name="restock" type="button" ng-click="reorder()">RESTOCK</button>
+                    <button class="btn btn-block btn-default" name="backToList" type="button" ng-click="backToList()">BACK TO LIST</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-sm-pull-2 col-sm-push-2 col-md-6 col-md-pull-0 col-md-push-0 hide-section" ng-hide="data.isItemReady()">
+            <h4 class="text-center">Select an item to view the details</h4>
+        </div>
+    </div>
+</div>
